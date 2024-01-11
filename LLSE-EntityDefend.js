@@ -1,4 +1,4 @@
-ll.registerPlugin("LLSE-EntityDefend", "EntityDefend", [0, 0, 1, Version.Dev], {
+ll.registerPlugin("LLSE-EntityDefend", "EntityDefend", [0, 0, 1, Version.Release], {
     "Author": "odorajbotoj"
 });
 
@@ -124,7 +124,9 @@ mc.listen("onServerStarted", () => {
                 });
                 if (!down()) {
                     out.error("[EntityDefend] 错误：无法保存");
+                    return;
                 }
+                out.success("操作成功");
                 break;
 
             case "rm":
@@ -134,7 +136,9 @@ mc.listen("onServerStarted", () => {
                         edArr.splice(i, 1);
                         if (!down()) {
                             out.error("[EntityDefend] 错误：无法保存");
+                            return;
                         }
+                        out.success("操作成功");
                         return;
                     }
                 }
@@ -143,7 +147,18 @@ mc.listen("onServerStarted", () => {
 
             case "ls":
                 // 列出所有
-                out.addMessage(data.toJson(edArr, 4));
+                var sArr = new Array();
+                for (var i = 0; i < edArr.length; i++) {
+                    sArr.push(`名称：${edArr[i].name}`);
+                    sArr.push(`维度ID：${edArr[i].dimid}`);
+                    sArr.push(`起始点：X:${edArr[i].from.x} Y:${edArr[i].from.y} Z:${edArr[i].from.z}`);
+                    sArr.push(`终到点：X:${edArr[i].to.x} Y:${edArr[i].to.y} Z:${edArr[i].to.z}`);
+                    sArr.push(`白名单：${edArr[i].whitelist.join("，")}`);
+                    sArr.push(`保护列表：${edArr[i].entity.join("，")}`);
+                    sArr.push("");
+                }
+                var fm = mc.newSimpleForm().setTitle(`EntityDefend List`).setContent(sArr.join("\n"));
+                ori.player.sendForm(fm, (_pl, _id) => {return});
                 break;
 
             case "wl":
@@ -152,6 +167,10 @@ mc.listen("onServerStarted", () => {
                     if (edArr[i].name == res.name) {
                         if (res.atype == "add") {
                             // 增加
+                            if (edArr[i].whitelist.includes(res.player)) {
+                                out.error("[EntityDefend] 该玩家已在白名单中");
+                                return;
+                            }
                             edArr[i].whitelist.push(res.player);
                         } else {
                             // 删除
@@ -163,7 +182,9 @@ mc.listen("onServerStarted", () => {
                         }
                         if (!down()) {
                             out.error("[EntityDefend] 错误：无法保存");
+                            return;
                         }
+                        out.success("操作成功");
                         return;
                     }
                 }
@@ -176,6 +197,10 @@ mc.listen("onServerStarted", () => {
                     if (edArr[i].name == res.name) {
                         if (res.atype == "add") {
                             // 增加
+                            if (edArr[i].entity.includes(res.type)) {
+                                out.error("[EntityDefend] 该类型实体已在名单中");
+                                return;
+                            }
                             edArr[i].entity.push(res.type);
                         } else {
                             // 删除
@@ -187,7 +212,9 @@ mc.listen("onServerStarted", () => {
                         }
                         if (!down()) {
                             out.error("[EntityDefend] 错误：无法保存");
+                            return;
                         }
+                        out.success("操作成功");
                         return;
                     }
                 }
