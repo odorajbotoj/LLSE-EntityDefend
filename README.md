@@ -18,7 +18,7 @@ LLSE-EntityDefend 在一定区域内保护实体不受玩家攻击
 
 + `/ende wl <name> <add|rm> <player>` 保护区白名单添加/删除玩家
 
-+ `/ende en <name> <add|rm> <type>` 保护区保护名单添加/删除实体类型
++ `/ende en <name> <add|rm> <type>` 保护区保护名单添加/删除实体类型(需要前缀，如`minecraft:`)
 
 ## 开源
 
